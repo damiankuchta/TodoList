@@ -1,0 +1,16 @@
+.task {
+    margin: 5px;
+}
+
+.task-button {
+    margin-left: 10px;
+}
+
+input[type=checkbox] {
+    display: none;
+}
+
+input[type=checkbox]:checked + label {
+    color: red;
+    text-decoration: line-through;
+}
