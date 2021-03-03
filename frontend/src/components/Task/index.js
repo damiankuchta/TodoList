@@ -3,14 +3,22 @@ import "./task.css"
 export default function Task(props) {
 
     const {setTasks} = props
+    const {setToggledTasks} = props
     const {taskApiLink} = props
 
-    function updateTask(id, data) {
-            setTasks(prevTasks => {
-            let index = prevTasks.findIndex(task =>  task.id === id )
-            let newTasksArray = prevTasks
-            newTasksArray[index] = {...data}
-            return [...newTasksArray]
+    // function updateTask(id, data) {
+    //     setTasks(prevTasks => {
+    //         let index = prevTasks.findIndex(task =>  task.id === id )
+    //         let newTasksArray = prevTasks
+    //         newTasksArray[index] = {...data}
+    //         return [...newTasksArray]
+    //     })
+    // }
+
+    function updateToggledTask(id, data) {
+        deleteTask(id)
+        setToggledTasks((prevTasks) => {
+            return [...prevTasks, data]
         })
     }
 
@@ -21,7 +29,7 @@ export default function Task(props) {
         })
     }
 
-    function onTaskComplete(task) {
+    function onTaskChecked(task) {
         const updateOptions = {
             method: "PUT",
             headers: {'Content-Type': "application/json"},
@@ -30,7 +38,7 @@ export default function Task(props) {
 
         fetch(taskApiLink+task.id+"/", updateOptions)
             .then(response => {return response.json()})
-            .then(data => updateTask(task.id, data))
+            .then(data => updateToggledTask(task.id, data))
 
     }
 
@@ -59,10 +67,10 @@ export default function Task(props) {
         <li className="task">
             <input type="checkbox" name={props.task.name}
                    checked={props.task.is_completed}
-                   onChange={() => onTaskComplete(props.task)}/>
+                   onChange={() => onTaskChecked(props.task)}/>
                 <label htmlFor={props.task.name}>{props.task.name}</label>
             <button className="task-button" onClick={() => onDeleteTask(props.task.id)}>Delete</button>
-            <button className="task-button" onClick={() => onTaskComplete(props.task)}>{doneButtontext}</button>
+            <button className="task-button" onClick={() => onTaskChecked(props.task)}>{doneButtontext}</button>
             <p>{toBeCompletedBy}</p>
             <hr/>
         </li>

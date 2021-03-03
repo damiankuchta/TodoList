@@ -11,6 +11,6 @@ input[type=checkbox] {
 }
 
 input[type=checkbox]:checked + label {
-    color: red;
+    color: green;
     text-decoration: line-through;
 }

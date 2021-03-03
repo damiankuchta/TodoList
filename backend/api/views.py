@@ -10,6 +10,16 @@ from tasks.models import Task
 @method_decorator(csrf_exempt, name="dispatch")
 class TaskViewSet(viewsets.ModelViewSet):
     serializer_class = TaskSerializer
-    queryset = Task.objects.all()
+
+    def get_queryset(self):
+        queryset = Task.objects.all()
+        is_completed = self.request.GET.get("is_completed", None)
+
+        if is_completed == "true":
+            queryset = queryset.filter(is_completed=True)
+        elif is_completed == "false":
+            queryset = queryset.filter(is_completed=False)
+
+        return queryset
 
     # todo : check data on POST
