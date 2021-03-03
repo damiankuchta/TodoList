@@ -1,0 +1,15 @@
+.time {
+    font-weight: bold;
+}
+
+.no-time {
+
+}
+
+.have-time {
+    color: green;
+}
+
+.past-time {
+    color: red;
+}

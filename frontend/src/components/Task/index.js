@@ -1,3 +1,5 @@
+import DaysLeftCounter from "../DaysLeftCounter"
+
 import "./task.css"
 
 export default function Task(props) {
@@ -5,6 +7,8 @@ export default function Task(props) {
     const {setTasks} = props
     const {setToggledTasks} = props
     const {taskApiLink} = props
+
+    const {name, to_be_completed_date, is_completed} = props.task
 
     // function updateTask(id, data) {
     //     setTasks(prevTasks => {
@@ -56,22 +60,18 @@ export default function Task(props) {
             })
     }
 
-    const toBeCompletedBy = props.task.is_completed ? "" :
-        props.task.to_be_completed_date ?
-            `To be completed by: ${props.task.to_be_completed_date}`
-            : `To be completed date not set`
-
     const doneButtontext = props.task.is_completed ? "undone" : "done"
 
     return (
         <li className="task">
-            <input type="checkbox" name={props.task.name}
-                   checked={props.task.is_completed}
+            <input type="checkbox" name={name}
+                   checked={is_completed}
                    onChange={() => onTaskChecked(props.task)}/>
-                <label htmlFor={props.task.name}>{props.task.name}</label>
+                <label htmlFor={name}>{name} {to_be_completed_date && "("+to_be_completed_date+")"}</label>
             <button className="task-button" onClick={() => onDeleteTask(props.task.id)}>Delete</button>
             <button className="task-button" onClick={() => onTaskChecked(props.task)}>{doneButtontext}</button>
-            <p>{toBeCompletedBy}</p>
+            {!is_completed &&
+            <DaysLeftCounter toBeCompletedByDate={to_be_completed_date}/>}
             <hr/>
         </li>
 
