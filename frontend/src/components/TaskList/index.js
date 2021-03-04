@@ -10,6 +10,7 @@ export default function TaskList(props) {
     const {setToggledTasks} = props
     const {isTasksLoaded, setIsTasksLoaded } = props
     const {taskApiLink, query} = props
+    const {sortBy} = props
 
     // load tasks for a first time
     useEffect(() => {
@@ -21,11 +22,18 @@ export default function TaskList(props) {
     }, [setTasks, setIsTasksLoaded, taskApiLink, query])
 
     useEffect(() => {
-        let sortedTasks = tasks
-        sortedTasks.sort((a,b) => {
-            return new Date(b.to_be_completed_date) - new Date(a.to_be_completed_date)
-        })
-        setTasks(() => {return [...sortedTasks]})
+        if (sortBy) {
+            let sortedTasks = tasks
+            sortedTasks.sort((a, b) => {
+                if (sortBy === "to_be_completed_date") {
+                    return new Date(b.to_be_completed_date) - new Date(a.to_be_completed_date)
+                }
+
+            })
+            setTasks(() => {
+                return [...sortedTasks]
+            })
+        }
     }, [isTasksLoaded, tasks.length])
 
     return (
@@ -43,3 +51,4 @@ export default function TaskList(props) {
         </div>
     )
 }
+

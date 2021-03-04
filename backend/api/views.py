@@ -1,3 +1,5 @@
+from datetime import date
+
 from rest_framework import viewsets
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
@@ -22,4 +24,10 @@ class TaskViewSet(viewsets.ModelViewSet):
 
         return queryset
 
-    # todo : check data on POST
+    def update(self, request, *args, **kwargs):
+        if request.data['is_completed']:
+            request.data['completed_date'] = date.today()
+        else:
+            request.data['completed_date'] = None
+        return super().update(request, *args, **kwargs)
+

@@ -35,7 +35,8 @@ export default function Tasks(props) {
                 setIsTasksLoaded={setIsTasksLoaded}
                 isTasksLoaded={isTasksLoaded}
                 taskApiLink={taskApiLink}
-                query="?is_completed=false"/>
+                query="?is_completed=false"
+                sortBy="to_be_completed_date"/>
 
             <TaskList
                 header="Tasks Completed"
