@@ -10,9 +10,9 @@ export default function DaysLeftCounter(props) {
     const oneDay = 24 * 60 * 60 * 1000
     const today = new Date()
     const {toBeCompletedByDate} = props
-    const daysLeftToComplete = Math.round((new Date(toBeCompletedByDate) - today) / oneDay) +1
+    const daysLeftToComplete = toBeCompletedByDate ? Math.round((new Date(toBeCompletedByDate) - today) / oneDay) : ""
 
-    if( daysLeftToComplete === -18689) {
+    if( daysLeftToComplete === "") {
         renderTime.placeholder = `You can take your time`
         renderTime.styles = "no-time time"
     } else if(Math.sign(daysLeftToComplete) === -1) {
