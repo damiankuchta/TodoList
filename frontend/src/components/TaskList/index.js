@@ -12,6 +12,7 @@ export default function TaskList(props) {
     const {taskApiLink, query} = props
     const {sortBy} = props
 
+
     // load tasks for a first time
     useEffect(() => {
         fetch(taskApiLink + query)

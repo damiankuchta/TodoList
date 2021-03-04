@@ -1,5 +1,8 @@
-import DaysLeftCounter from "../DaysLeftCounter"
+import {useState, useEffect} from 'react'
 
+import DaysLeftCounter from "./DaysLeftCounter"
+import TaskName from "./TaskName";
+import TaskDate from "./TaskDate";
 import "./task.css"
 
 export default function Task(props) {
@@ -8,45 +11,41 @@ export default function Task(props) {
     const {setToggledTasks} = props
     const {taskApiLink} = props
 
-    const {name, to_be_completed_date, is_completed, completed_date} = props.task
+    const [task, setTask] = useState({...props.task})
 
-    // function updateTask(id, data) {
-    //     setTasks(prevTasks => {
-    //         let index = prevTasks.findIndex(task =>  task.id === id )
-    //         let newTasksArray = prevTasks
-    //         newTasksArray[index] = {...data}
-    //         return [...newTasksArray]
-    //     })
-    // }
-
-    function updateToggledTask(id, data) {
-        deleteTask(id)
-        setToggledTasks((prevTasks) => {
-            return [...prevTasks, data]
-        })
+    function updateCheckedTask(task) {
+        updateTask({is_completed: !task.is_completed})
+            .then((task) => {
+                deleteTaskFromList(task.id)
+                setToggledTasks((prevTasks) => {
+                return [...prevTasks, task]
+                })
+            })
     }
 
-    function deleteTask(id) {
+    function updateTask(data) {
+        const updateOptions = {
+            method: "PUT",
+            headers: {'Content-Type': "application/json"},
+            body: JSON.stringify({...task, ...data})
+        }
+
+        return fetch(taskApiLink+task.id+"/", updateOptions)
+            .then(response => {return response.json()})
+            .then(task => {
+                setTask(() => ({...task, ...data}))
+                return task
+            })
+    }
+
+    function deleteTaskFromList(id) {
         setTasks(prevTasks => {
             let data = prevTasks.filter(task => { return task.id !== id })
             return [...data]
         })
     }
 
-    function onTaskChecked(task) {
-        const updateOptions = {
-            method: "PUT",
-            headers: {'Content-Type': "application/json"},
-            body: JSON.stringify({...task, is_completed: !task.is_completed})
-        }
-
-        fetch(taskApiLink+task.id+"/", updateOptions)
-            .then(response => {return response.json()})
-            .then(data => updateToggledTask(task.id, data))
-
-    }
-
-    function onDeleteTask(id) {
+    function deleteTask(id) {
         const deleteOptions = {
             method: "DELETE",
             headers: {'Content-Type': "application/json"},
@@ -55,28 +54,28 @@ export default function Task(props) {
         fetch(taskApiLink+id, deleteOptions)
             .then(response => {
                 if(response.status === 204) {
-                    deleteTask(id)
+                    deleteTaskFromList(id)
                 }
             })
     }
 
-    const doneButtontext = is_completed ? "undone" : "done"
-    function date() {
-        if(is_completed || to_be_completed_date) {
-            return (`(` + (is_completed ? completed_date : to_be_completed_date) + `)`)
-        }
-    }
+    const doneButtontext = task.is_completed ? "undone" : "done"
 
     return (
         <li className="task">
-            <input type="checkbox" name={name}
-                   checked={is_completed}
-                   onChange={() => onTaskChecked(props.task)}/>
-                <label htmlFor={name}>{name} {date()}</label>
-            <button className="task-button" onClick={() => onDeleteTask(props.task.id)}>Delete</button>
-            <button className="task-button" onClick={() => onTaskChecked(props.task)}>{doneButtontext}</button>
-            {!is_completed &&
-            <DaysLeftCounter toBeCompletedByDate={to_be_completed_date}/>}
+            <TaskName name={task.name} updateTask={updateTask}/>
+
+            <TaskDate date={task.is_completed ? task.completed_date : task.to_be_completed_date}
+                      editable={task.is_completed}/>
+
+            <button className="task-button"
+                    onClick={() => deleteTask(task.id)}>Delete</button>
+
+            <button className="task-button"
+                    onClick={() => updateCheckedTask(task)}>{doneButtontext}</button>
+
+            {!task.is_completed &&
+            <DaysLeftCounter toBeCompletedByDate={task.to_be_completed_date}/> }
             <hr/>
         </li>
 
