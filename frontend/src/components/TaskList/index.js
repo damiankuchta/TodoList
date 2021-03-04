@@ -20,13 +20,13 @@ export default function TaskList(props) {
 
     }, [setTasks, setIsTasksLoaded, taskApiLink, query])
 
-    // useEffect(() => {
-    //     let sortedTasks = tasks
-    //     sortedTasks.sort((a,b) => {
-    //         return new Date(b.to_be_completed_date) - new Date(a.to_be_completed_date)
-    //     })
-    //     setTasks(() => {return [...sortedTasks]})
-    // }, [isTasksLoaded])
+    useEffect(() => {
+        let sortedTasks = tasks
+        sortedTasks.sort((a,b) => {
+            return new Date(b.to_be_completed_date) - new Date(a.to_be_completed_date)
+        })
+        setTasks(() => {return [...sortedTasks]})
+    }, [isTasksLoaded, tasks.length])
 
     return (
         <div>
