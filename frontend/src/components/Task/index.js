@@ -63,10 +63,12 @@ export default function Task(props) {
 
     return (
         <li className="task">
-            <TaskName name={task.name} updateTask={updateTask}/>
+            <TaskName name={task.name}
+                      updateTask={updateTask}/>
 
             <TaskDate date={task.is_completed ? task.completed_date : task.to_be_completed_date}
-                      editable={task.is_completed}/>
+                      canEdit={!task.is_completed}
+                      updateTask={updateTask}/>
 
             <button className="task-button"
                     onClick={() => deleteTask(task.id)}>Delete</button>
