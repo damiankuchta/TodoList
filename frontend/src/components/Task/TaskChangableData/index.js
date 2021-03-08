@@ -24,11 +24,13 @@ export default function TaskChangableData(props){
         setData(() => (event.target.value))
     }
 
+    const displayData = data ? data : "(no data)"
+
     return (
         isEditBlocked ?
         editable ?
             <input onChange={onChange} onBlur={onFocustOut} value={data} type={type} autoFocus={true}/> :
-            <span onClick={onClick}>{data} </span> :
+            <span onClick={onClick}>{displayData} </span> :
         <span>{data} </span>
     )
 }
