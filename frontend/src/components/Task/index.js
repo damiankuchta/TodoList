@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react'
 
 import DaysLeftCounter from "./DaysLeftCounter"
 import TaskName from "./TaskName";
-import TaskDate from "./TaskDate";
+import TaskChangableData from "./TaskChangableData";
 import "./task.css"
 
 export default function Task(props) {
@@ -63,12 +63,20 @@ export default function Task(props) {
 
     return (
         <li className="task">
-            <TaskName name={task.name}
-                      updateTask={updateTask}/>
+            <TaskChangableData data={task.name}
+                        updateTask={updateTask}
+                        isEditBlocked={true}
+                        type={"text"}
+                        dataName={"name"}
+                        />
 
-            <TaskDate date={task.is_completed ? task.completed_date : task.to_be_completed_date}
-                      canEdit={!task.is_completed}
-                      updateTask={updateTask}/>
+            <TaskChangableData data={task.is_completed ? task.completed_date : task.to_be_completed_date}
+                               isEditBlocked={!task.is_completed}
+                               updateTask={updateTask}
+                               type={"date"}
+                               dataName={"to_be_completed_date"}
+                    />
+}/>
 
             <button className="task-button"
                     onClick={() => deleteTask(task.id)}>Delete</button>

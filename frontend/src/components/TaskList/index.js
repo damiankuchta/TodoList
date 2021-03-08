@@ -1,4 +1,4 @@
-import {useEffect} from 'react'
+import {useEffect, useState} from 'react'
 
 import './task_list.css'
 import Task from "../Task";
@@ -23,19 +23,25 @@ export default function TaskList(props) {
     }, [setTasks, setIsTasksLoaded, taskApiLink, query])
 
     useEffect(() => {
+        sortList()
+    }, [isTasksLoaded])
+
+
+    function sortList() {
         if (sortBy) {
             let sortedTasks = tasks
             sortedTasks.sort((a, b) => {
                 if (sortBy === "to_be_completed_date") {
                     return new Date(b.to_be_completed_date) - new Date(a.to_be_completed_date)
                 }
-
             })
-            setTasks(() => {
-                return [...sortedTasks]
+                setTasks(() => {
+                    return sortedTasks
             })
         }
-    }, [isTasksLoaded, tasks.length])
+    }
+
+
 
     return (
         <div>
@@ -46,7 +52,8 @@ export default function TaskList(props) {
                           taskApiLink={taskApiLink}
                           key={task.id}
                           task={task}
-                          setTasks={setTasks}/>)
+                          setTasks={setTasks}
+                          />)
                     : placeHolder}
             </ul>
         </div>
